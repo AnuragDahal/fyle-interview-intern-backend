@@ -3,6 +3,7 @@ from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
 from marshmallow_enum import EnumField
 from core.models.assignments import Assignment, GradeEnum
 from core.libs.helpers import GeneralObject
+from core.models.teachers import Teacher
 
 
 class AssignmentSchema(SQLAlchemyAutoSchema):
@@ -49,3 +50,4 @@ class AssignmentGradeSchema(Schema):
     def initiate_class(self, data_dict, many, partial):
         # pylint: disable=unused-argument,no-self-use
         return GeneralObject(**data_dict)
+
