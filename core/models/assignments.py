@@ -13,7 +13,6 @@ class GradeEnum(str, enum.Enum):
     C = 'C'
     D = 'D'
 
-
 class AssignmentStateEnum(str, enum.Enum):
     DRAFT = 'DRAFT'
     SUBMITTED = 'SUBMITTED'

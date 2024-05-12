@@ -3,6 +3,8 @@ from core.models.users import User
 from core import db
 from typing import List
 from core.models.assignments import Assignment
+from core.libs import assertions
+from sqlalchemy.sql import or_
 
 
 def get_teachers():
@@ -15,21 +17,30 @@ def get_teachers():
     return teacher_in_users
 
 
-def get_submitted_assignments():
+def get_assignments():
+    submitted_and_graded_assignments = db.session.query(Assignment).filter(
+        or_(Assignment.state == 'SUBMITTED', Assignment.state == "GRADED")).all()
+    return submitted_and_graded_assignments
 
-    submitted_assignments = db.session.query(Assignment).filter(
-        Assignment.state == 'SUBMITTED').all()
-    return submitted_assignments
-
-
-def get_graded_assignments():
-    graded_assignments = db.session.query(Assignment).filter(
-        Assignment.state == 'GRADED').all()
-    return graded_assignments
 
 def regrade(id, grade):
-    db.session.query(Assignment).filter(
-        Assignment.id == id).update({Assignment.grade: grade}, synchronize_session=False)
-    db.session.commit()
-    regraded_assignment = db.session.query(Assignment).filter(Assignment.id == id).first()
-    return regraded_assignment
+    # Check if id exists in the database
+    assignment = db.session.query(Assignment).filter(
+        Assignment.id == id).first()
+    if assignment is None:
+        assertions.assert_found(
+            assignment, 'No assignment with this id was found')
+    if grade not in ["A", "B", "C", "D"]:
+        assertions.assert_unprocessable(
+            False, 'Grade must be one of A, B, C, D')
+
+    try:
+        db.session.query(Assignment).filter(
+            Assignment.id == id).update({Assignment.grade: grade, Assignment.state: "GRADED"}, synchronize_session=False)
+        db.session.commit()
+        regraded_assignment = db.session.query(
+            Assignment).filter(Assignment.id == id).first()
+        return regraded_assignment
+    except Exception as e:
+        db.session.rollback()
+        raise e
