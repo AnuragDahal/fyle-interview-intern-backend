@@ -5,7 +5,9 @@ from core.apis.responses import APIResponse
 from core.models.assignments import Assignment
 from core.apis.decorators import authenticate_principal
 from core.models.teachers import Teacher
-from ..teachers.schema import TeacherSchema
+from ..teachers.schema import ViewTeachersSchema
+from ..teachers.principal import get_teachers
+
 
 principal_assignment_resources = Blueprint(
     "principal_assignment_resources", __name__)
@@ -13,10 +15,11 @@ principal_assignment_resources = Blueprint(
 
 @principal_assignment_resources.route('/teacher', methods=['GET'], strict_slashes=False)
 @authenticate_principal
-def view_teachers():
+def view_teachers(p):
     """Returns list of teachers"""
-    teachers = Teacher.get_all_teachers()
-    teachers_dump = TeacherSchema.dump(teachers, many=True)
+    teachers = get_teachers()
+    schema = ViewTeachersSchema(many=True)
+    teachers_dump = schema.dump(teachers)
     return APIResponse.respond(data=teachers_dump)
 
 
