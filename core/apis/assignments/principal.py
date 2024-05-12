@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, request
 from core import db
 from core.apis import decorators
 from core.apis.responses import APIResponse
@@ -10,7 +10,8 @@ from ..teachers.schema import ViewTeachersSchema
 from ..teachers.principal import (
     get_teachers,
     get_submitted_assignments,
-    get_graded_assignments
+    get_graded_assignments,
+    regrade
 )
 
 
@@ -48,6 +49,11 @@ def view_graded_assignments(p):
     return APIResponse.respond(data=view_assignments)
 
 
-@principal_assignment_resources.route("/assignments/regrade", methods=["POST"], strict_slashes=False)
-def regrade_assignment():
-    pass
+@principal_assignment_resources.route("/assignments/regrade/<id>", methods=["POST"], strict_slashes=False)
+@authenticate_principal
+def regrade_assignment(p, id):
+    grade = request.args.get('grade')
+    assignment = regrade(id, grade)
+    regraded_assignment_dump = ViewGradedAssignmentsSchema(
+        many=False).dump(assignment)
+    return APIResponse.respond(data=regraded_assignment_dump)
