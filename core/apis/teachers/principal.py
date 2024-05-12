@@ -17,3 +17,7 @@ def get_submitted_assignments():
     
     submitted_assignments=db.session.query(Assignment).filter(Assignment.state == 'SUBMITTED').all()
     return submitted_assignments
+
+def get_graded_assignments():
+    graded_assignments=db.session.query(Assignment).filter(Assignment.state == 'GRADED').all()
+    return graded_assignments

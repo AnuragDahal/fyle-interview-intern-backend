@@ -25,7 +25,24 @@ class AssignmentSchema(SQLAlchemyAutoSchema):
         # pylint: disable=unused-argument,no-self-use
         return Assignment(**data_dict)
 
+class ViewGradedAssignmentsSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = Assignment
+        unknown = EXCLUDE
 
+    id = auto_field()
+    content = auto_field()
+    grade = auto_field()
+    created_at = auto_field()
+    updated_at = auto_field()
+    state = auto_field()
+    teacher_id = auto_field()
+    student_id = auto_field()
+
+    @post_load
+    def initiate_class(self, data_dict, many, partial):
+        return Assignment(**data_dict)
+    
 class ViewSubmittedAssignmentsSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = Assignment

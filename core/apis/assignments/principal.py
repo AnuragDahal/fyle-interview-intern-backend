@@ -3,11 +3,15 @@ from core import db
 from core.apis import decorators
 from core.apis.responses import APIResponse
 from core.models.assignments import Assignment
-from .schema import ViewSubmittedAssignmentsSchema
+from .schema import ViewSubmittedAssignmentsSchema, ViewGradedAssignmentsSchema
 from core.apis.decorators import authenticate_principal
 from core.models.teachers import Teacher
 from ..teachers.schema import ViewTeachersSchema
-from ..teachers.principal import get_teachers, get_submitted_assignments
+from ..teachers.principal import (
+    get_teachers,
+    get_submitted_assignments,
+    get_graded_assignments
+)
 
 
 principal_assignment_resources = Blueprint(
@@ -25,7 +29,7 @@ def view_teachers(p):
 
 
 @principal_assignment_resources.route("/assignments/submitted", methods=["GET"], strict_slashes=False)
-@authenticate_principal
+# @authenticate_principal
 def view_submitted_assignments(p):
     """Returns list of submitted assignments"""
     submitted_assignments = get_submitted_assignments()
@@ -35,10 +39,13 @@ def view_submitted_assignments(p):
 
 
 @principal_assignment_resources.route("/assignments/graded", methods=["GET"], strict_slashes=False)
-def view_graded_assignments():
+@authenticate_principal
+def view_graded_assignments(p):
     """Returns list of graded assignments"""
-    graded_assignments = Assignment.get_graded_assignments()
-    return APIResponse.respond(data=graded_assignments)
+    graded_assignments = get_graded_assignments()
+    view_assignments = ViewGradedAssignmentsSchema(
+        many=True).dump(graded_assignments)
+    return APIResponse.respond(data=view_assignments)
 
 
 @principal_assignment_resources.route("/assignments/regrade", methods=["POST"], strict_slashes=False)
