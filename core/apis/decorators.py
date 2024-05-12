@@ -45,13 +45,8 @@ def authenticate_principal(func):
         teacher = db.session.query(Teacher).filter(
             Teacher.id == p.teacher_id).first()
 
-        # Check for the respective user id's in the database
-        # principal_user_id = db.session.query(Principal.user_id).filter(
-        #     Principal.user_id == p.user_id).scalar()
-        # student_user_id = db.session.query(Student.user_id).filter(
-        #     Student.user_id == p.user_id).scalar()
-        # teacher_user_id = db.session.query(Teacher.user_id).filter(
-        #     Teacher.user_id == p.user_id).scalar()
+        if not (principal or student or teacher):
+            assertions.assert_found(None, 'No such user found')
 
         if request.path.startswith('/principal'):
             assertions.assert_true(principal.id == p.principal_id and principal.user_id ==
