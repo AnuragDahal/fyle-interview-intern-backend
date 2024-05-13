@@ -4,6 +4,14 @@ from tests import app
 from core import db
 from core.models.assignments import Assignment
 
+# !part of the fixture import that I was unable to make it work 
+# from sqlalchemy import create_engine
+# from sqlalchemy.orm import sessionmaker, Session
+
+# # setup the engine and sessionmaker
+# engine = create_engine('sqlite:///core/store.sqlite3')
+# SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
 
 @pytest.fixture
 def client():
@@ -69,12 +77,25 @@ def h_principal():
 
     return headers
 
-import pytest
 
 @pytest.fixture
 def reset_assignment_state():
-    assignment = db.session.query(Assignment).filter(Assignment.id == 2).first()
+    assignment = db.session.query(Assignment).filter(
+        Assignment.id == 2).first()
     if assignment:
         assignment.state = 'DRAFT'
         db.session.commit()
         db.session.refresh(assignment)
+
+
+#! This is the fixture that I was unable to make it work
+# @pytest.fixture
+# def db_session():
+#     # create a new session
+#     session = SessionLocal()
+
+#     yield session  # this is where the testing happens
+
+#     # rollback any changes after the test
+#     session.rollback()
+#     session.close()
