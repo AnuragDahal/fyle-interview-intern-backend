@@ -7,10 +7,11 @@ from sqlite3 import Connection as SQLite3Connection
 
 
 app = Flask(__name__)
-db = SQLAlchemy(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///./store.sqlite3'
 app.config['SQLALCHEMY_ECHO'] = False
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 app.test_client()
 

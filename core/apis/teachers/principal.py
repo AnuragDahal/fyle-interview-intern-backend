@@ -33,6 +33,9 @@ def regrade_grade(id, grade):
     if grade not in ["A", "B", "C", "D"]:
         assertions.assert_unprocessable(
             False, 'Grade must be one of A, B, C, D')
+    if assignment.state == "DRAFT":
+        assertions.assert_valid(
+            False, 'Draft assignments cannot be graded')
 
     try:
         db.session.query(Assignment).filter(
