@@ -1,3 +1,7 @@
+from core.models.assignments import Assignment
+from core import db
+
+
 def test_get_assignments_student_1(client, h_student_1):
     response = client.get(
         '/student/assignments',
@@ -57,6 +61,16 @@ def test_post_assignment_student_1(client, h_student_1):
     assert data['teacher_id'] is None
 
 
+def setup_method(self, method):
+    if method.__name__ == "test_submit_assignment_student_1":
+        assignment = db.session.query(Assignment).filter(
+            Assignment.id == 2).first()
+        if assignment:
+            assignment.state = 'DRAFT'
+            db.session.commit()
+            db.session.refresh(assignment)
+
+
 def test_submit_assignment_student_1(client, h_student_1):
     response = client.post(
         '/student/assignments/submit',
@@ -82,6 +96,8 @@ def test_assignment_resubmit_error(client, h_student_1):
             'id': 2,
             'teacher_id': 2
         })
+
+    assert response.status_code == 400
     error_response = response.json
     assert response.status_code == 400
     assert error_response['error'] == 'FyleError'
