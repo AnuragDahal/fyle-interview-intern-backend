@@ -23,7 +23,7 @@ def get_assignments():
     return submitted_and_graded_assignments
 
 
-def regrade(id, grade):
+def regrade_grade(id, grade):
     # Check if id exists in the database
     assignment = db.session.query(Assignment).filter(
         Assignment.id == id).first()

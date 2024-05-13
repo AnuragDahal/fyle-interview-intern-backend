@@ -10,7 +10,7 @@ from ..teachers.schema import ViewTeachersSchema
 from ..teachers.principal import (
     get_teachers,
     get_assignments,
-    regrade
+    regrade_grade
 )
 from core.libs import assertions
 from .schema import AssignmentSchema
@@ -19,7 +19,7 @@ principal_assignment_resources = Blueprint(
     "principal_assignment_resources", __name__)
 
 
-@principal_assignment_resources.route('/teacher', methods=['GET'], strict_slashes=False)
+@principal_assignment_resources.route('/teachers', methods=['GET'], strict_slashes=False)
 @authenticate_principal
 def view_teachers(p):
     """Returns list of teachers"""
@@ -29,7 +29,7 @@ def view_teachers(p):
     return APIResponse.respond(data=teachers_dump)
 
 
-@principal_assignment_resources.route("/assignments/submitted", methods=["GET"], strict_slashes=False)
+@principal_assignment_resources.route("/assignments", methods=["GET"], strict_slashes=False)
 @authenticate_principal
 def view_submitted_assignments(p):
     """Returns list of submitted assignments"""
@@ -39,16 +39,16 @@ def view_submitted_assignments(p):
     return APIResponse.respond(data=graded_submitted_assignments)
 
 
-@principal_assignment_resources.route("/assignments/regrade", methods=["POST"], strict_slashes=False)
+@principal_assignment_resources.route("/assignments/grade", methods=["POST"], strict_slashes=False)
 @authenticate_principal
 @decorators.accept_payload
-def regrade_assignment(payload, authenticated_principal):
-    """Regrade an assignment"""
+def grade_regrade_assignment(payload, authenticated_principal):
+    """ Grade or Regrade an assignment"""
 
     assignment_id = payload.get('id')
     new_grade = payload.get('grade')
 
-    regraded_assignment = regrade(assignment_id, new_grade)
-    serialized_assignment = AssignmentSchema(
-        many=False).dump(regraded_assignment)
-    return APIResponse.respond(data=serialized_assignment)
+    assignment = regrade_grade(assignment_id, new_grade)
+    graded_regraded_assignment = AssignmentSchema(
+        many=False).dump(assignment)
+    return APIResponse.respond(data=graded_regraded_assignment)
