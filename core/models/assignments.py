@@ -91,11 +91,13 @@ class Assignment(db.Model):
             assignment, 'No assignment with this id was found')
         assertions.assert_valid(
             grade is not None, 'assignment with empty grade cannot be graded')
-
+        assertions.assert_valid(auth_principal.teacher_id == assignment.teacher_id,
+                                "assignment can only be graded by the teacher to whom it is submitted")
+        assertions.assert_valid(
+            assignment.state == AssignmentStateEnum.SUBMITTED, 'only a submitted assignment can be graded')
         assignment.grade = grade
         assignment.state = AssignmentStateEnum.GRADED
         db.session.flush()
-
         return assignment
 
     @classmethod

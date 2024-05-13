@@ -1,5 +1,4 @@
 from core.models.assignments import Assignment
-from core import db
 
 
 def test_get_assignments_student_1(client, h_student_1):
@@ -32,7 +31,6 @@ def test_post_assignment_null_content(client, h_student_1):
     """
     failure case: content cannot be null
     """
-
     response = client.post(
         '/student/assignments',
         headers=h_student_1,
@@ -59,16 +57,6 @@ def test_post_assignment_student_1(client, h_student_1):
     assert data['content'] == content
     assert data['state'] == 'DRAFT'
     assert data['teacher_id'] is None
-
-
-def setup_method(self, method):
-    if method.__name__ == "test_submit_assignment_student_1":
-        assignment = db.session.query(Assignment).filter(
-            Assignment.id == 2).first()
-        if assignment:
-            assignment.state = 'DRAFT'
-            db.session.commit()
-            db.session.refresh(assignment)
 
 
 def test_submit_assignment_student_1(client, h_student_1, reset_assignment_state):
