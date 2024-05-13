@@ -71,7 +71,7 @@ def setup_method(self, method):
             db.session.refresh(assignment)
 
 
-def test_submit_assignment_student_1(client, h_student_1):
+def test_submit_assignment_student_1(client, h_student_1, reset_assignment_state):
     response = client.post(
         '/student/assignments/submit',
         headers=h_student_1,

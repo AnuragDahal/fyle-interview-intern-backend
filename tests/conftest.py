@@ -1,6 +1,8 @@
 import pytest
 import json
 from tests import app
+from core import db
+from core.models.assignments import Assignment
 
 
 @pytest.fixture
@@ -66,3 +68,13 @@ def h_principal():
     }
 
     return headers
+
+import pytest
+
+@pytest.fixture
+def reset_assignment_state():
+    assignment = db.session.query(Assignment).filter(Assignment.id == 2).first()
+    if assignment:
+        assignment.state = 'DRAFT'
+        db.session.commit()
+        db.session.refresh(assignment)
