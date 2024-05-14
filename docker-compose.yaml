@@ -1,0 +1,11 @@
+version: '3'
+services:
+  app:
+    build: .
+    container_name: fyle-intern
+    command: python run.py
+    ports:
+      - 5000:5000
+    volumes:
+      - .:/app
+      

@@ -1,6 +1,5 @@
-import random
-import string
-from datetime import datetime
+# This file contains helper functions that are used in the project.
+import datetime
 
 TIMESTAMP_WITH_TIMEZONE_FORMAT = '%Y-%m-%dT%H:%M:%S.%f%z'
 
@@ -12,4 +11,4 @@ class GeneralObject:
 
 
 def get_utc_now():
-    return datetime.utcnow()
+    return datetime.datetime.now(datetime.timezone.utc)
