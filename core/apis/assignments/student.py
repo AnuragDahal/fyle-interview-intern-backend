@@ -41,20 +41,6 @@ def upsert_assignment(p, incoming_payload):
     return APIResponse.respond(data=upserted_assignment_dump)
 
 
-# @student_assignments_resources.route('/assignments/submit', methods=['POST'], strict_slashes=False)
-# @decorators.accept_payload
-# @decorators.authenticate_principal
-# def submit_assignment(p, incoming_payload):
-#     """Submit an assignment"""
-#     submit_assignment_payload = AssignmentSubmitSchema().load(incoming_payload)
-#     submitted_assignment = Assignment.submit(
-#         _id=submit_assignment_payload.id,
-#         teacher_id=submit_assignment_payload.teacher_id,
-#         auth_principal=p
-#     )
-#     db.session.commit()
-#     submitted_assignment_dump = AssignmentSchema().dump(submitted_assignment)
-#     return APIResponse.respond(data=submitted_assignment_dump)
 
 @student_assignments_resources.route('/assignments/submit', methods=['POST'], strict_slashes=False)
 @decorators.accept_payload
@@ -65,7 +51,6 @@ def submit_assignment(p, incoming_payload):
     
     # Fetch the assignment and print its state
     assignment_to_submit = Assignment.get_by_id(submit_assignment_payload.id)
-    print(f"Assignment state before submit: {assignment_to_submit.state}")
 
     submitted_assignment = Assignment.submit(
         _id=submit_assignment_payload.id,
@@ -73,13 +58,7 @@ def submit_assignment(p, incoming_payload):
         auth_principal=p
     )
 
-    # Print the state of the assignment after submit
-    print(f"Assignment state after submit: {submitted_assignment.state}")
-
     db.session.commit()
     submitted_assignment_dump = AssignmentSchema().dump(submitted_assignment)
     
-    # Print the response data
-    print(f"Response data: {submitted_assignment_dump}")
-
     return APIResponse.respond(data=submitted_assignment_dump)

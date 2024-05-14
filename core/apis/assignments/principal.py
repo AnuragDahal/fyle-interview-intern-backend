@@ -31,8 +31,8 @@ def view_teachers(p):
 
 @principal_assignment_resources.route("/assignments", methods=["GET"], strict_slashes=False)
 @authenticate_principal
-def view_submitted_assignments(p):
-    """Returns list of submitted assignments"""
+def view_graded_submitted_assignments(p):
+    """Returns list of submitted and graded assignments"""
     submitted_assignments = get_assignments()
     graded_submitted_assignments = AssignmentSchema(
         many=True).dump(submitted_assignments, many=True)
