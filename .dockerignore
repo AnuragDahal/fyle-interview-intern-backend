@@ -26,9 +26,7 @@ venv
 *.venv
 *.venv/
 
-env
-*.env
-*.env/
+env/
 
 
 # Ignore IDE specific settings
