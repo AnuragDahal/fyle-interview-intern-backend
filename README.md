@@ -43,7 +43,8 @@ rm core/store.sqlite3
 flask db upgrade -d core/migrations/
 ```
 
-Please note that if the database is reset, some tests may fail due to missing data.
+Please be aware that resetting the database could cause some tests to fail. This could be due to the absence of expected data or the presence of incorrect data as per the test setup.
+
 ### Start Server
 
 ```
