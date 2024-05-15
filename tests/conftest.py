@@ -8,7 +8,7 @@ from core.models.assignments import Assignment
 # from sqlalchemy import create_engine
 # from sqlalchemy.orm import sessionmaker, Session
 
-# # setup the engine and sessionmaker
+# setup the engine and sessionmaker
 # engine = create_engine('sqlite:///core/store.sqlite3')
 # SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
@@ -65,6 +65,17 @@ def h_teacher_2():
 
     return headers
 
+@pytest.fixture
+def h_teacher_3():
+    headers = {
+        'X-Principal': json.dumps({
+            'teacher_id': 3,
+            'user_id': 6
+        })
+    }
+
+    return headers
+
 
 @pytest.fixture
 def h_principal():
@@ -78,6 +89,11 @@ def h_principal():
     return headers
 
 
+
+
+
+
+
 @pytest.fixture
 def reset_assignment_state():
     assignment = db.session.query(Assignment).filter(
@@ -86,6 +102,7 @@ def reset_assignment_state():
         assignment.state = 'DRAFT'
         db.session.commit()
         db.session.refresh(assignment)
+    
 
 
 #! This is the fixture that I was unable to make it work
@@ -98,4 +115,4 @@ def reset_assignment_state():
 
 #     # rollback any changes after the test
 #     session.rollback()
-#     session.close()
+    # session.close()

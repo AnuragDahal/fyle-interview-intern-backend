@@ -49,9 +49,6 @@ def submit_assignment(p, incoming_payload):
     """Submit an assignment"""
     submit_assignment_payload = AssignmentSubmitSchema().load(incoming_payload)
     
-    # Fetch the assignment and print its state
-    assignment_to_submit = Assignment.get_by_id(submit_assignment_payload.id)
-
     submitted_assignment = Assignment.submit(
         _id=submit_assignment_payload.id,
         teacher_id=submit_assignment_payload.teacher_id,

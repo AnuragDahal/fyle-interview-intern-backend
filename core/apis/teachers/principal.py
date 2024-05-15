@@ -27,15 +27,13 @@ def regrade_grade(id, grade):
     # Check if id exists in the database
     assignment = db.session.query(Assignment).filter(
         Assignment.id == id).first()
-    if assignment is None:
-        assertions.assert_found(
-            assignment, 'No assignment with this id was found')
-    if grade not in ["A", "B", "C", "D"]:
-        assertions.assert_unprocessable(
-            False, 'Grade must be one of A, B, C, D')
-    if assignment.state == "DRAFT":
-        assertions.assert_valid(
-            False, 'Draft assignments cannot be graded')
+    assertions.assert_found(
+        assignment , 'No assignment with this id was found')
+    assertions.assert_processable(
+        grade in ["A", "B", "C", "D"], 'Grade must be one of A, B, C, D')
+    assertions.assert_valid(
+        assignment.state != "DRAFT", 'Draft assignments cannot be graded')
+    assertions.assert_processable(grade != None, 'Grade cannot be empty')
 
     try:
         db.session.query(Assignment).filter(

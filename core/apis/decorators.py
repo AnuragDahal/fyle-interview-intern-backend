@@ -44,7 +44,12 @@ def authenticate_principal(func):
             Student.id == p.student_id).scalar()
         teacher = db.session.query(Teacher).filter(
             Teacher.id == p.teacher_id).first()
-
+        
+        # check if the user exists
+        is_existing_user=User.query.filter_by(id=p.user_id).first()
+        assertions.assert_found(is_existing_user, 'User does not exist')
+        
+        
         if not (principal or student or teacher):
             assertions.assert_found(None, 'No such user found')
 
