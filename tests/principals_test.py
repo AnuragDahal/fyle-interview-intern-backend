@@ -116,3 +116,27 @@ def test_grade_assignment_no_grade(client, h_principal):
     )
 
     assert response.status_code == 422  # or 422, depending on your application
+
+
+def test_invalid_headers(client):
+    # Arrange: Set invalid headers
+    invalid_headers = {'Authorization': 'InvalidToken'}
+
+    # Act: Send a POST request to the /principal/assignments/grade endpoint with invalid headers
+    response = client.post(
+        '/principal/assignments/grade',
+        headers=invalid_headers
+    )
+
+    # Assert: Check that the response indicates unauthorized
+    assert response.status_code == 401
+
+def test_invalid_route(client, h_principal):
+    # Act: Send a GET request to an invalid route
+    response = client.get(
+        '/invalid/route',
+        headers=h_principal
+    )
+
+    # Assert: Check that the response indicates not found
+    assert response.status_code == 404
