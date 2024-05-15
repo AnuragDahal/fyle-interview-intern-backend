@@ -47,6 +47,25 @@ flask db upgrade -d core/migrations/
 ```
 bash run.sh
 ```
+### Docker Setup
+
+Before you can build and run the Docker container, make sure you have Docker Desktop installed and the Docker daemon is running.
+
+To build and run the container, use the following command:
+
+```shellscript
+docker-compose up
+```
+
+The application will be accessible at `localhost:5000`.
+
+### Local Machine Setup (Windows)
+
+To run the application on your local machine, use the following command:
+
+```shellscript
+python run.py
+```
 ### Run Tests
 
 ```
