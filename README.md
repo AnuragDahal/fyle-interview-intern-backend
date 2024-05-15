@@ -37,11 +37,13 @@ pip install -r requirements.txt
 ```
 ### Reset DB
 
-```
+```shellscript
 export FLASK_APP=core/server.py
 rm core/store.sqlite3
 flask db upgrade -d core/migrations/
 ```
+
+Please note that if the database is reset, some tests may fail due to missing data.
 ### Start Server
 
 ```
